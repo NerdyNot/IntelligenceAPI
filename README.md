@@ -56,11 +56,10 @@ Intelligence API는 LLM(Large Language Model)과 LangChain, LangServe를 이용�
 
 ### 설치 방법
 
-1. **환경 변수 설정**: Intelligence API는 올바르게 동작하기 위해 필요한 환경 변수를 설정해야 합니다. 이 환경 변수들은 `values.yaml` 파일을 통해 설정할 수 있습니다. 아래는 예시입니다.
+1. **환경 변수 설정**: Intelligence API가 올바르게 동작하려면 필요한 환경 변수를 설정해야 합니다. 이 환경 변수들은 `/infrastructure/helm/chart/intelligenceapi/values.yaml` 파일을 통해 설정할 수 있습니다. 아래는 예시입니다.
 
     ```yaml
     # Global settings section:
-    # This section defines settings that are common across the entire application.
     global:
       namespace: ns-intelligenceapi  # Namespace where resources will be deployed.
       image:
@@ -86,21 +85,19 @@ Intelligence API는 LLM(Large Language Model)과 LangChain, LangServe를 이용�
         indexName: "Your Redis index name"  # Redis index name.
     ```
 
-   `values.yaml` 파일에 환경 변수를 설정한 후, 다음 단계로 넘어갑니다.
+   `/infrastructure/helm/chart/intelligenceapi/values.yaml` 파일에 환경 변수를 설정한 후, 다음 단계로 넘어갑니다.
 
 2. Helm 차트를 이용하여 Intelligence API를 설치합니다.
     ```bash
-    helm install intelligence-api ./helm/intelligence-api
+    helm install intelligence-api /infrastructure/helm/chart/intelligenceapi
     ```
 
-3. Istio Gateway 및 Virtual Service를 설정하여
+3. Istio Gateway 및 Virtual Service를 설정하여 외부 접근을 구성합니다. 필요한 설정 파일들은 `/infrastructure/istio` 디렉토리에서 찾을 수 있습니다.
 
- 외부 접근을 구성합니다.
-
-4. 각 서비스의 엔드포인트를 설정하고 필요한 인증 정보(GitHub OAuth 등)를 구성합니다.
+4. 각 서비스의 엔드포인트를 설정하고, 필요한 인증 정보(GitHub OAuth 등)를 구성합니다.
 
 ### 설정 파일
-- `values.yaml` 파일을 통해 각 API의 설정 값을 변경할 수 있습니다.
+- `/infrastructure/helm/chart/intelligenceapi/values.yaml` 파일을 통해 각 API의 설정 값을 변경할 수 있습니다.
 
 ## 사용법
 
@@ -170,7 +167,7 @@ Intelligence API is an integrated AI API utilizing Large Language Models (LLM) w
 
 ### Installation Steps
 
-1. **Set Environment Variables**: Configure the required environment variables for Intelligence API to function correctly. These variables can be set via the `values.yaml` file. Below is an example:
+1. **Set Environment Variables**: Configure the required environment variables for the Intelligence API to function correctly. These variables can be set via the `/infrastructure/helm/chart/intelligenceapi/values.yaml` file. Below is an example:
 
     ```yaml
     # Global settings section:
@@ -199,19 +196,19 @@ Intelligence API is an integrated AI API utilizing Large Language Models (LLM) w
         indexName: "Your Redis index name"  # Redis index name.
     ```
 
-   After setting the environment variables in the `values.yaml` file, proceed to the next step.
+   After setting the environment variables in the `/infrastructure/helm/chart/intelligenceapi/values.yaml` file, proceed to the next step.
 
 2. Install the Intelligence API using Helm charts:
     ```bash
-    helm install intelligence-api ./helm/intelligence-api
+    helm install intelligence-api /infrastructure/helm/chart/intelligenceapi
     ```
 
-3. Configure Istio Gateway and Virtual Service to set up external access.
+3. Configure Istio Gateway and Virtual Service to set up external access. The necessary configuration files can be found in the `/infrastructure/istio` directory.
 
 4. Set up each service's endpoints and configure the necessary authentication information (e.g., GitHub OAuth).
 
 ### Configuration Files
-- You can modify the configuration values for each API via the `values.yaml` file.
+- You can modify the configuration values for each API via the `/infrastructure/helm/chart/intelligenceapi/values.yaml` file.
 
 ## Usage
 
