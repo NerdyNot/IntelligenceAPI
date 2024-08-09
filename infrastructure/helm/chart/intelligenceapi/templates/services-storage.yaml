@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: intelligenceapi-storage
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: intelligenceapi-storage
+spec:
+  replicas: {{ .Values.storage.replicaCount }}
+  selector:
+    matchLabels:
+      app: intelligenceapi-storage
+  template:
+    metadata:
+      labels:
+        app: intelligenceapi-storage
+    spec:
+      containers:
+      - name: intelligenceapi-storage
+        image: {{ .Values.storage.image.repository }}:{{ .Values.storage.image.tag }}
+        imagePullPolicy: {{ .Values.storage.image.pullPolicy }}
+        ports:
+        - containerPort: 8000
+        env:
+        - name: LLM_PROVIDER
+          value: "{{ .Values.storage.llm.provider }}"
+        - name: LLM_API_KEY
+          value: "{{ .Values.storage.llm.apiKey }}"
+        - name: LLM_MODEL
+          value: "{{ .Values.storage.llm.model }}"
+        - name: LLM_TEMPERATURE
+          value: "{{ .Values.storage.llm.temperature }}"
+        - name: AZURE_ENDPOINT
+          value: "{{ .Values.storage.llm.azureEndpoint }}"
+        - name: AZURE_API_VERSION
+          value: "{{ .Values.storage.llm.azureApiVersion }}"
+        - name: EMBEDDING_PROVIDER
+          value: "{{ .Values.storage.embedding.provider }}"
+        - name: EMBEDDING_API_KEY
+          value: "{{ .Values.storage.embedding.apiKey }}"
+        - name: EMBEDDING_MODEL
+          value: "{{ .Values.storage.embedding.model }}"
+        - name: STORAGE_PROVIDER
+          value: "{{ .Values.storage.storageProvider }}"
+        - name: AZURE_CONNECTION_STRING
+          value: "{{ .Values.storage.azure.connectionString }}"
+        - name: AZURE_CONTAINER_NAME
+          value: "{{ .Values.storage.azure.containerName }}"
+        - name: AZURE_ACCOUNT_NAME
+          value: "{{ .Values.storage.azure.accountName }}"
+        - name: AWS_ACCESS_KEY_ID
+          value: "{{ .Values.storage.aws.accessKeyId }}"
+        - name: AWS_SECRET_ACCESS_KEY
+          value: "{{ .Values.storage.aws.secretAccessKey }}"
+        - name: AWS_REGION
+          value: "{{ .Values.storage.aws.region }}"
+        - name: REDIS_URL
+          value: "{{ .Values.storage.redis.url }}"
+        - name: REDIS_INDEX_NAME
+          value: "{{ .Values.storage.redis.indexName }}"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: intelligenceapi-storage
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: intelligenceapi-storage
+spec:
+  type: {{ .Values.storage.service.type }}
+  selector:
+    app: intelligenceapi-storage
+  ports:
+  - protocol: TCP
+    name: http
+    port: {{ .Values.storage.service.port }}
+    targetPort: 8000

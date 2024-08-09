@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: intelligenceapi-analysis
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: intelligenceapi-analysis
+spec:
+  replicas: {{ .Values.analysis.replicaCount }}
+  selector:
+    matchLabels:
+      app: intelligenceapi-analysis
+  template:
+    metadata:
+      labels:
+        app: intelligenceapi-analysis
+    spec:
+      containers:
+      - name: intelligenceapi-analysis
+        image: {{ .Values.analysis.image.repository }}:{{ .Values.analysis.image.tag }}
+        imagePullPolicy: {{ .Values.analysis.image.pullPolicy }}
+        ports:
+        - containerPort: 8000
+        env:
+        - name: LLM_PROVIDER
+          value: "{{ .Values.analysis.llm.provider }}"
+        - name: LLM_API_KEY
+          value: "{{ .Values.analysis.llm.apiKey }}"
+        - name: LLM_MODEL
+          value: "{{ .Values.analysis.llm.model }}"
+        - name: LLM_TEMPERATURE
+          value: "{{ .Values.analysis.llm.temperature }}"
+        - name: AZURE_ENDPOINT
+          value: "{{ .Values.analysis.llm.azureEndpoint }}"
+        - name: AZURE_API_VERSION
+          value: "{{ .Values.analysis.llm.azureApiVersion }}"
+        - name: EMBEDDING_PROVIDER
+          value: "{{ .Values.analysis.embedding.provider }}"
+        - name: EMBEDDING_API_KEY
+          value: "{{ .Values.analysis.embedding.apiKey }}"
+        - name: EMBEDDING_MODEL
+          value: "{{ .Values.analysis.embedding.model }}"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: intelligenceapi-analysis
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: intelligenceapi-analysis
+spec:
+  type: {{ .Values.analysis.service.type }}
+  selector:
+    app: intelligenceapi-analysis
+  ports:
+  - protocol: TCP
+    name: http
+    port: {{ .Values.analysis.service.port }}
+    targetPort: 8000

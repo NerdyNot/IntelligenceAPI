@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: intelligenceapi-gatewayapi
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: intelligenceapi-gatewayapi
+spec:
+  replicas: {{ .Values.gatewayapi.replicaCount }}
+  selector:
+    matchLabels:
+      app: intelligenceapi-gatewayapi
+  template:
+    metadata:
+      labels:
+        app: intelligenceapi-gatewayapi
+    spec:
+      containers:
+      - name: intelligenceapi-gatewayapi
+        image: {{ .Values.gatewayapi.image.repository }}:{{ .Values.gatewayapi.image.tag }}
+        imagePullPolicy: {{ .Values.gatewayapi.image.pullPolicy }}
+        ports:
+        - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: intelligenceapi-gatewayapi
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: intelligenceapi-gatewayapi
+spec:
+  type: {{ .Values.gatewayapi.service.type }}
+  selector:
+    app: intelligenceapi-gatewayapi
+  ports:
+  - protocol: TCP
+    name: http
+    port: {{ .Values.gatewayapi.service.port }}
+    targetPort: 8000

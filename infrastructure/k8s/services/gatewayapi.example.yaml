@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: intelligenceapi-gatewayapi
+  namespace: ns-intelligenceapi
+  labels:
+    app: intelligence-gatewayapi
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: intelligenceapi-gatewayapi
+  template:
+    metadata:
+      labels:
+        app: intelligenceapi-gatewayapi
+    spec:
+      containers:
+      - name: intelligenceapi-gatewayapi
+        image: nerdynot/intelligenceapi-gatewayapi:latest
+        ports:
+        - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: intelligenceapi-gatewayapi
+  namespace: ns-intelligenceapi
+  labels:
+    app: intelligenceapi-gatewayapi
+spec:
+  selector:
+    app: intelligenceapi-gatewayapi
+  ports:
+  - protocol: TCP
+    name: http
+    port: 80
+    targetPort: 8000

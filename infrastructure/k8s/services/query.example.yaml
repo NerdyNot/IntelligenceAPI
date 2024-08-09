@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: intelligenceapi-query
+  namespace: ns-intelligenceapi
+  labels:
+    app: intelligenceapi-query
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: intelligenceapi-query
+  template:
+    metadata:
+      labels:
+        app: intelligenceapi-query
+    spec:
+      containers:
+      - name: intelligenceapi-query
+        image: nerdynot/intelligenceapi-query:latest
+        ports:
+        - containerPort: 8000
+        env:
+        # Set the LLM provider (e.g., 'azure', 'openai', 'gemini', 'vertexai', 'anthropic')
+        - name: LLM_PROVIDER
+          value: "Your LLM provider"
+        # Set the API key for the chosen LLM provider
+        - name: LLM_API_KEY
+          value: "Your LLM api key"
+        # Set the model name for the chosen LLM provider
+        - name: LLM_MODEL
+          value: "Your LLM model"
+        # Set the temperature for the model's response generation
+        - name: LLM_TEMPERATURE
+          value: "0.5"
+        # Set the Azure endpoint if the LLM provider is 'azure'
+        - name: AZURE_ENDPOINT
+          value: "Your Azure endpoint"
+        # Set the Azure API version if the LLM provider is 'azure'
+        - name: AZURE_API_VERSION
+          value: "Your Azure API version"
+        # Set the Embedding provider (e.g., 'azure', 'openai', 'gemini', 'vertexai')
+        - name: EMBEDDING_PROVIDER
+          value: "Your embedding provider"
+        # Set the API key for the chosen Embedding provider
+        - name: EMBEDDING_API_KEY
+          value: "Your embedding api key"
+        # Set the model name for the chosen Embedding provider
+        - name: EMBEDDING_MODEL
+          value: "Your embedding model"
+        - name: REDIS_URL
+          value: "Your Redis URL"
+        - name: REDIS_INDEX_NAME
+          value: "Your Redis index name"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: intelligenceapi-query
+  namespace: ns-intelligenceapi
+  labels:
+    app: intelligenceapi-query
+spec:
+  selector:
+    app: intelligenceapi-query
+  ports:
+  - protocol: TCP
+    name: http
+    port: 80
+    targetPort: 8000

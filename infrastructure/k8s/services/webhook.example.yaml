@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: intelligenceapi-webhook
+  namespace: ns-intelligenceapi
+  labels:
+    app: intelligence-webhook
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: intelligenceapi-webhook
+  template:
+    metadata:
+      labels:
+        app: intelligenceapi-webhook
+    spec:
+      containers:
+      - name: intelligenceapi-webhook
+        image: nerdynot/intelligenceapi-webhook:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: SLACK_WEBHOOK_URL_CSP
+          value: "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK/CSP"
+        - name: SLACK_WEBHOOK_URL_DEVOPS
+          value: "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK/DEVOPS"
+        - name: MESSAGE_LANGUAGE
+          value: "English"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: intelligenceapi-webhook
+  namespace: ns-intelligenceapi
+  labels:
+    app: intelligenceapi-webhook
+spec:
+  selector:
+    app: intelligenceapi-webhook
+  ports:
+  - protocol: TCP
+    name: http
+    port: 80
+    targetPort: 8000

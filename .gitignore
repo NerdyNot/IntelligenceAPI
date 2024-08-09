@@ -1,0 +1,7 @@
+.env/*
+**/__pycache__/**
+*.yaml
+!*.example.yaml
+!/.github/**
+!/infrastructure/helm/**
+**/node_modules/*

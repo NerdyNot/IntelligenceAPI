@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: intelligenceapi-query
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: intelligenceapi-query
+spec:
+  replicas: {{ .Values.query.replicaCount }}
+  selector:
+    matchLabels:
+      app: intelligenceapi-query
+  template:
+    metadata:
+      labels:
+        app: intelligenceapi-query
+    spec:
+      containers:
+      - name: intelligenceapi-query
+        image: {{ .Values.query.image.repository }}:{{ .Values.query.image.tag }}
+        imagePullPolicy: {{ .Values.query.image.pullPolicy }}
+        ports:
+        - containerPort: 8000
+        env:
+        - name: LLM_PROVIDER
+          value: "{{ .Values.query.llm.provider }}"
+        - name: LLM_API_KEY
+          value: "{{ .Values.query.llm.apiKey }}"
+        - name: LLM_MODEL
+          value: "{{ .Values.query.llm.model }}"
+        - name: LLM_TEMPERATURE
+          value: "{{ .Values.query.llm.temperature }}"
+        - name: AZURE_ENDPOINT
+          value: "{{ .Values.query.llm.azureEndpoint }}"
+        - name: AZURE_API_VERSION
+          value: "{{ .Values.query.llm.azureApiVersion }}"
+        - name: EMBEDDING_PROVIDER
+          value: "{{ .Values.query.embedding.provider }}"
+        - name: EMBEDDING_API_KEY
+          value: "{{ .Values.query.embedding.apiKey }}"
+        - name: EMBEDDING_MODEL
+          value: "{{ .Values.query.embedding.model }}"
+        - name: REDIS_URL
+          value: "{{ .Values.query.redis.url }}"
+        - name: REDIS_INDEX_NAME
+          value: "{{ .Values.query.redis.indexName }}"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: intelligenceapi-query
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: intelligenceapi-query
+spec:
+  type: {{ .Values.query.service.type }}
+  selector:
+    app: intelligenceapi-query
+  ports:
+  - protocol: TCP
+    name: http
+    port: {{ .Values.query.service.port }}
+    targetPort: 8000

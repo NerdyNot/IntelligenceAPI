@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: intelligenceapi-webhook
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: intelligenceapi-webhook
+spec:
+  replicas: {{ .Values.webhook.replicaCount }}
+  selector:
+    matchLabels:
+      app: intelligenceapi-webhook
+  template:
+    metadata:
+      labels:
+        app: intelligenceapi-webhook
+    spec:
+      containers:
+      - name: intelligenceapi-webhook
+        image: {{ .Values.webhook.image.repository }}:{{ .Values.webhook.image.tag }}
+        imagePullPolicy: {{ .Values.webhook.image.pullPolicy }}
+        ports:
+        - containerPort: 8000
+        env:
+        - name: SLACK_WEBHOOK_URL_CSP
+          value: "{{ .Values.webhook.slackWebhookUrlCSP }}"
+        - name: SLACK_WEBHOOK_URL_DEVOPS
+          value: "{{ .Values.webhook.slackWebhookUrlDevops }}"
+        - name: MESSAGE_LANGUAGE
+          value: "{{ .Values.webhook.messageLanguage }}"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: intelligenceapi-webhook
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: intelligenceapi-webhook
+spec:
+  type: {{ .Values.webhook.service.type }}
+  selector:
+    app: intelligenceapi-webhook
+  ports:
+  - protocol: TCP
+    name: http
+    port: {{ .Values.webhook.service.port }}
+    targetPort: 8000
