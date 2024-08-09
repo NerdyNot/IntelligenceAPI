@@ -1,4 +1,4 @@
-name: IntelligenceAPI Storage Service Build and Push
+name: Storage Service Build and Push
 
 on:
   push:

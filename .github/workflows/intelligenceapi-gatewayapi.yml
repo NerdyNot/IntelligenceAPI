@@ -1,4 +1,4 @@
-name: IntelligenceAPI GatewayAPI Service Build and Push
+name: GatewayAPI Service Build and Push
 
 on:
   push:

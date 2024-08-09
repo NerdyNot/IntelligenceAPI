@@ -1,4 +1,4 @@
-name: IntelligenceAPI Analysis Service Build and Push
+name: Analysis Service Build and Push
 
 on:
   push:

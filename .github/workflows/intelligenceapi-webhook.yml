@@ -1,4 +1,4 @@
-name: IntelligenceAPI Webhook Service Build and Push
+name: Webhook Service Build and Push
 
 on:
   push:

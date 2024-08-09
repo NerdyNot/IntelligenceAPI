@@ -1,4 +1,4 @@
-name: IntelligenceAPI Query Service Build and Push
+name: Query Service Build and Push
 
 on:
   push:

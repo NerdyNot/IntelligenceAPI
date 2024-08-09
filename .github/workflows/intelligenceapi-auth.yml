@@ -1,4 +1,4 @@
-name: IntelligenceAPI Auth Service Build and Push
+name: Auth Service Build and Push
 
 on:
   push:
